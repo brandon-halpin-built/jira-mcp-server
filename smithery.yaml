@@ -1,0 +1,36 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+# Note: OAuth browser flow requires local execution. Smithery cloud hosting is not supported.
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - jiraHost
+      - jiraOauthClientId
+      - jiraOauthClientSecret
+    properties:
+      jiraHost:
+        type: string
+        description: Jira host URL (e.g., https://your-domain.atlassian.net)
+      jiraOauthClientId:
+        type: string
+        description: OAuth 2.0 Client ID from the Atlassian Developer Console
+      jiraOauthClientSecret:
+        type: string
+        description: OAuth 2.0 Client Secret from the Atlassian Developer Console
+  commandFunction:
+    |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/server.js'],
+      env: {
+        JIRA_HOST: config.jiraHost,
+        JIRA_OAUTH_CLIENT_ID: config.jiraOauthClientId,
+        JIRA_OAUTH_CLIENT_SECRET: config.jiraOauthClientSecret
+      }
+    })
+  exampleConfig:
+    jiraHost: https://example.atlassian.net
+    jiraOauthClientId: your-oauth-client-id
+    jiraOauthClientSecret: your-oauth-client-secret
